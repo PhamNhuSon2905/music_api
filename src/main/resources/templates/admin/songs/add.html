@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="admin/fragments/head :: head"></head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="admin/fragments/header :: header"></div>
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1 style="margin-left: 10px;">Thêm mới bài hát</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/dashboard/index}"><i class="fa fa-dashboard"></i>Trang chủ</a></li>
+                <li class="active">Thêm mới</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box box-primary">
+                <form th:action="@{/admin/songs/add}" method="post" enctype="multipart/form-data"
+                      th:object="${songForm}">
+                    <div class="box-body">
+
+                        <!-- Tên bài hát -->
+                        <div class="form-group">
+                            <label th:for="*{title}">Tên bài hát</label>
+                            <input type="text" th:field="*{title}" class="form-control"
+                                   placeholder="Nhập tên bài hát...">
+                            <div class="text-danger" th:errors="*{title}"></div>
+                        </div>
+
+                        <!-- Ca sĩ -->
+                        <div class="form-group">
+                            <label th:for="*{artist}">Tên ca sĩ</label>
+                            <input type="text" th:field="*{artist}" class="form-control"
+                                   placeholder="Nhập tên ca sĩ...">
+                            <div class="text-danger" th:errors="*{artist}"></div>
+                        </div>
+
+                        <!-- Album -->
+                        <div class="form-group">
+                            <label th:for="*{album}">Tên album</label>
+                            <input type="text" th:field="*{album}" class="form-control" placeholder="Nhập tên album...">
+                            <div class="text-danger" th:errors="*{album}"></div>
+                        </div>
+
+                        <!-- Ảnh bài hát -->
+                        <div class="form-group">
+                            <label>Ảnh bài hát (PNG, JPG, JPEG, WEBP)</label>
+                            <input type="file" th:field="*{imageFile}" class="form-control"
+                                   accept="image/png,image/jpeg,image/webp">
+                            <div class="text-danger" th:errors="*{imageFile}"></div>
+                        </div>
+
+                        <!-- File MP3 -->
+                        <div class="form-group">
+                            <label>File nhạc (MP3)</label>
+                            <input type="file" th:field="*{audioFile}" class="form-control" accept="audio/mpeg">
+                            <div class="text-danger" th:errors="*{audioFile}"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Thêm bài hát</button>
+                        <a th:href="@{/admin/songs/index}" class="btn btn-default">Quay lại</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div th:replace="admin/fragments/script :: script"></div>
+</body>
+</html>

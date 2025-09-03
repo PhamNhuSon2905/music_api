@@ -1,0 +1,92 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security6" lang="">
+
+<aside class="main-sidebar" th:fragment="sidebar">
+
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img th:src="${#authentication.principal.displayAvatar}"
+                     class="img-circle" alt="avatar profile">
+            </div>
+            <div class="pull-left info">
+                <p><span sec:authentication="name"></span></p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+        </div>
+
+
+        <ul class="sidebar-menu" data-widget="tree">
+            <li><a th:href="@{/admin/dashboard/index}"> <i class="fa fa-book"></i> <span>Trang chủ</span>
+                <span class="pull-right-container"> </span>
+            </a></li>
+            <li class="treeview"><a href=""> <i class="fa fa-dashboard"></i> <span>Quản lý bài hát</span> <span
+                    class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i></span></a>
+                <ul class="treeview-menu">
+                    <li><a th:href="@{/admin/songs/index}"><i class="fa fa-circle-o"></i> Danh sách các bài hát</a></li>
+                    <li><a th:href="@{/admin/songs/add}"><i class="fa fa-circle-o"></i> Thêm mới bài hát</a></li>
+                </ul>
+            </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-tags"></i>
+                    <span>Quản lý thể loại</span>
+                    <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a th:href="@{/admin/genres/index}"><i class="fa fa-circle-o"></i> Danh sách thể loại</a></li>
+                    <li><a th:href="@{/admin/genres/add}"><i class="fa fa-circle-o"></i> Thêm mới thể loại</a></li>
+                </ul>
+            </li>
+
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span>Quản lý tài khoản</span>
+                    <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a th:href="@{/admin/account/management}"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+<!--                    <li><a th:href="@{/admin/account/add}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>-->
+                </ul>
+            </li>
+
+
+            <!--            <li class="treeview"><a href=""> <i class="fa fa-dashboard"></i> <span>Nhà Cung Cấp</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i></span></a>-->
+            <!--                <ul class="treeview-menu">-->
+            <!--                    <li><a th:href="@{/admin/supplier}"><i class="fa fa-circle-o"></i> Danh sách</a></li>-->
+            <!--                    <li><a th:href="@{/admin/supplier-add}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>-->
+            <!--                </ul>-->
+            <!--            </li>-->
+            <!--            <li class="treeview"><a href=""> <i class="fa fa-dashboard"></i> <span>Quản lý kho nhập</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i></span></a>-->
+            <!--                <ul class="treeview-menu">-->
+            <!--                    <li><a th:href="@{/admin/inventory}"><i class="fa fa-circle-o"></i> Danh sách</a></li>-->
+            <!--                    <li><a th:href="@{/admin/inventory-add}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>-->
+            <!--                </ul>-->
+            <!--            </li>-->
+            <!--            <li class="treeview"><a href=""> <i class="fa fa-dashboard"></i> <span>Quản lý kho xuất</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i></span></a>-->
+            <!--                <ul class="treeview-menu">-->
+            <!--                    <li><a th:href="@{/admin/inventory-out}"><i class="fa fa-circle-o"></i> Danh sách</a></li>-->
+            <!--                    <li><a th:href="@{/admin/inventory-out-add}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>-->
+            <!--                </ul>-->
+            <!--            </li>-->
+            <!--            <li><a th:href="@{/admin/account/management}"> <i class="fa fa-th"></i> <span>Quản lý tài khoản</span>-->
+            <!--                <span class="pull-right-container"> -->
+            <!--						</span>-->
+            <!--            </a></li>-->
+            <!--            <li><a th:href="@{/admin/historyAll}"> <i class="fa fa-th"></i> <span>Lịch sử kho hàng</span>-->
+            <!--                <span class="pull-right-container"> -->
+            <!--						</span>-->
+            <!--            </a></li>-->
+
+        </ul>
+
+    </section>
+</aside>

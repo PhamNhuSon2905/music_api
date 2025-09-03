@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="admin/fragments/head :: head"></head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="admin/fragments/header :: header"></div>
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1 style="margin-left: 10px;"><i class="fa fa-info-circle"></i> Chi tiết thể loại</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/dashboard/index}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li><a th:href="@{/admin/genres/index}">Thể loại</a></li>
+                <li class="active">Chi tiết</li>
+            </ol>
+        </section>
+
+        <section class="content">
+
+            <!-- THÔNG BÁO THÀNH CÔNG / LỖI -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Đóng"><span aria-hidden="true">&times;</span></button>
+                <p th:text="${successMessage}"></p>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Đóng"><span aria-hidden="true">&times;</span></button>
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <div class="box box-primary" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px;">
+                <div class="box-body">
+                    <!-- Tên thể loại -->
+                    <div class="form-group">
+                        <label><i class="fa fa-music"></i> <strong>Tên thể loại:</strong></label>
+                        <div class="well well-sm" style="background-color: #f9f9f9; border-left: 4px solid #3c8dbc;">
+                            <span th:text="${genre.name}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="form-group">
+                        <label><i class="fa fa-align-left"></i> <strong>Mô tả:</strong></label>
+                        <div class="well" style="background-color: #f9f9f9; border-left: 4px solid #00a65a;">
+                            <span th:text="${genre.description}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách bài hát -->
+                    <div class="form-group">
+                        <label><i class="fa fa-list"></i> <strong>Danh sách bài hát thuộc thể loại này :</strong></label>
+                        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px;">
+                            <table class="table table-hover table-bordered text-center" style="margin-bottom: 0;">
+                                <thead style="background-color: #f0f0f0;">
+                                <tr>
+                                    <th>Tên bài hát</th>
+                                    <th>Ca sĩ</th>
+                                    <th>Album</th>
+                                    <th>Thời lượng</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="song : ${songs}">
+                                    <td th:text="${song.title}"></td>
+                                    <td th:text="${song.artist}"></td>
+                                    <td th:text="${song.album}"></td>
+                                    <td th:text="${song.duration + ' giây'}"></td>
+                                    <td>
+                                        <a th:href="@{'/admin/songs/detail/' + ${song.id}}" class="btn btn-info btn-xs">Chi tiết</a>
+                                        <a th:href="@{'/admin/genres/unassign-song?genreId=' + ${genre.id} + '&songId=' + ${song.id}}"
+                                           class="btn btn-danger btn-xs"
+                                           onclick="return confirm('Bạn có chắc muốn gỡ bài hát này khỏi thể loại không?');">
+                                            Gỡ
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(songs)}">
+                                    <td colspan="5"><i>Không có bài hát nào trong thể loại này.</i></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-footer text-right">
+                    <a th:href="@{/admin/genres/index}" class="btn btn-default">
+                        <i class="fa fa-arrow-left"></i> Quay lại
+                    </a>
+                    <a class="btn btn-warning" th:href="@{'/admin/genres/assign-songs/' + ${genre.id}}">+ Gán bài hát</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div th:replace="admin/fragments/script :: script"></div>
+</body>
+</html>

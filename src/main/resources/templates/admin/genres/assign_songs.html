@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<div th:replace="admin/fragments/head :: head"></div>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="admin/fragments/header :: header"></div>
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <h1 style="margin-left: 10px;">Gán bài hát vào thể loại</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/dashboard/index}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li><a th:href="@{/admin/genres/index}">Thể loại</a></li>
+                <li class="active">Gán bài hát</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thể loại: <span th:text="${genre.name}"></span></h3>
+                </div>
+
+                <form th:action="@{/admin/genres/assign-songs}" method="post">
+                    <input type="hidden" name="genreId" th:value="${genre.id}" />
+
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Chọn các bài hát để gán:</label>
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Chọn</th>
+                                        <th>Tên bài hát</th>
+                                        <th>Ca sĩ</th>
+                                        <th>Album</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- Nếu có bài hát chưa được gán -->
+                                    <tr th:each="song : ${unassignedSongs}">
+                                        <td>
+                                            <input type="checkbox" name="songIds" th:value="${song.id}" />
+                                        </td>
+                                        <td th:text="${song.title}"></td>
+                                        <td th:text="${song.artist}"></td>
+                                        <td th:text="${song.album}"></td>
+                                    </tr>
+
+                                    <!-- Nếu danh sách rỗng -->
+                                    <tr th:if="${#lists.isEmpty(unassignedSongs)}">
+                                        <td colspan="4" class="text-center text-muted">
+                                            <i>Hiện tất cả các bài hát đã có thể loại nhạc.</i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="box-footer">
+                        <a th:href="@{'/admin/genres/detail/' + ${genre.id}}" class="btn btn-default">Quay lại</a>
+
+                        <!-- Chỉ hiển thị nút lưu khi còn bài hát để gán -->
+                        <button type="submit" class="btn btn-primary"
+                                th:if="${not #lists.isEmpty(unassignedSongs)}">
+                            Lưu gán bài hát
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<div th:replace="admin/fragments/script :: script"></div>
+</body>
+</html>

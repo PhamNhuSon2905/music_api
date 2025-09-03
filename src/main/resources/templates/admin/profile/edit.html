@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<div th:replace="admin/fragments/head :: head"></div>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="admin/fragments/header :: header"></div>
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1 style="margin-left: 10px;">Chỉnh sửa hồ sơ</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/dashboard/index}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li><a th:href="@{/admin/profile}">Hồ sơ</a></li>
+                <li class="active">Chỉnh sửa</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <form th:action="@{/admin/profile/edit}" method="post" enctype="multipart/form-data"
+                  th:object="${adminProfileDTO}">
+                <div class="box box-primary">
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <label>Họ tên:</label>
+                            <input type="text" th:field="*{fullname}" class="form-control" placeholder="Họ tên">
+                            <div class="text-danger" th:if="${#fields.hasErrors('fullname')}"
+                                 th:errors="*{fullname}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Số điện thoại:</label>
+                            <input type="text" th:field="*{phone}" class="form-control" placeholder="Số điện thoại">
+                            <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Địa chỉ:</label>
+                            <input type="text" th:field="*{address}" class="form-control" placeholder="Địa chỉ">
+                            <div class="text-danger" th:if="${#fields.hasErrors('address')}"
+                                 th:errors="*{address}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giới tính:</label>
+                            <select th:field="*{gender}" class="form-control">
+                                <option value="true">Nam</option>
+                                <option value="false">Nữ</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Chọn ảnh đại diện mới:</label>
+                            <input type="file" name="avatarFile" class="form-control">
+                            <div class="text-danger" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ảnh đại diện hiện tại:</label><br>
+                            <img th:src="${#strings.isEmpty(adminProfileDTO.avatar)
+                  ? '/assets/images/user2-160x160.jpg'
+                  : adminProfileDTO.avatar}"
+                                 alt="Ảnh đại diện hiện tại"
+                                 class="img-thumbnail"
+                                 style="width: 150px; height: 150px;"/>
+                        </div>
+
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                            <a th:href="@{/admin/profile}" class="btn btn-default">Hủy</a>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+
+</div>
+<div th:replace="admin/fragments/script :: script"></div>
+</body>
+</html>

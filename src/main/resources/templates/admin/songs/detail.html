@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="admin/fragments/head :: head">
+    <title>Chi tiết bài hát</title>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="admin/fragments/header :: header"></div>
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1 style="margin-left: 10px;" th:text="'Chi tiết bài hát: ' + ${song.title}"></h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/dashboard/index}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li><a th:href="@{/admin/songs/index}">Danh sách bài hát</a></li>
+                <li class="active">Chi tiết</li>
+            </ol>
+        </section>
+
+        <section class="content">
+
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+
+                        <!-- Ảnh -->
+                        <div class="col-md-4">
+                            <img th:src="@{${song.image}}" alt="Ảnh bìa bài hát" class="img-responsive img-thumbnail">
+                        </div>
+
+                        <!-- Thông tin bài hát -->
+                        <div class="col-md-8">
+                            <h3 th:text="${song.title}"></h3>
+                            <p><strong>Ca sĩ:</strong> <span th:text="${song.artist}"></span></p>
+                            <p><strong>Album:</strong> <span th:text="${song.album}"></span></p>
+
+                            <p><strong>Thể loại:</strong>
+                                <span th:text="${genre != null} ? ${genre.name} : 'Chưa có thể loại'"></span>
+                            </p>
+
+                            <p><strong>Thời lượng:</strong> <span th:text="${song.duration} + ' giây'"></span></p>
+                            <p><strong>Lượt phát:</strong> <span th:text="${song.counter}"></span></p>
+                            <p><strong>Yêu thích:</strong>
+                                <span th:text="${song.favorite ? 'Có' : 'Không'}"></span>
+                            </p>
+                            <p><strong>Thời gian tạo:</strong>
+                                <span th:text="${#temporals.format(song.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                            </p>
+                            <!-- Trình phát nhạc -->
+                            <h4>Nghe thử:</h4>
+                            <audio controls style="width: 100%;" th:src="@{${song.source}}"></audio>
+
+                            <br><br>
+                            <a th:href="@{/admin/songs/index}" class="btn btn-default">Quay lại danh sách</a>
+                            <a th:href="@{'/admin/songs/edit/' + ${song.id}}" class="btn btn-success">Sửa bài hát</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<div th:replace="admin/fragments/script :: script"></div>
+</body>
+</html>

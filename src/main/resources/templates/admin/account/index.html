@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<div th:replace="admin/fragments/head :: head"></div>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:replace="admin/fragments/header :: header"></div>
+
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+
+        <section class="content-header">
+            <h1 style="margin-left: 10px;">Danh sách tài khoản</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/dashboard/index}"><i class="fa fa-dashboard"></i>Trang chủ</a></li>
+                <li class="active">Quản lý tài khoản</li>
+            </ol>
+        </section>
+
+        <section class="content">
+
+            <!-- THÔNG BÁO THÀNH CÔNG -->
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Đóng"><span aria-hidden="true">&times;</span>
+                </button>
+                <p th:text="${successMessage}"></p>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-error alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Đóng"><span aria-hidden="true">&times;</span>
+                </button>
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <form method="get" th:action="@{/admin/account/management}">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" name="keyword" class="form-control"
+                                           placeholder="Từ khóa tìm kiếm..." th:value="${keyword}">
+                                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <select name="filterBy" class="form-control">
+                                    <option value="">Tìm theo...</option>
+                                    <option value="username" th:selected="${filterBy == 'username'}">Username</option>
+                                    <option value="email" th:selected="${filterBy == 'email'}">Email</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <select name="role" class="form-control">
+                                    <option value="">Tất cả quyền</option>
+                                    <option value="ROLE_ADMIN" th:selected="${role == 'ROLE_ADMIN'}">Admin</option>
+                                    <option value="ROLE_USER" th:selected="${role == 'ROLE_USER'}">User</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-filter"></i> Lọc
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="box-body">
+                    <table class="table table-bordered table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th>Tên người dùng</th>
+                            <th>Email</th>
+                            <th>Quyền</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.role.name()}"></td>
+                            <td>
+                                <span th:text="${user.enabled ? 'Hoạt động' : 'Bị khóa'}"
+                                      th:classappend="${user.enabled ? 'label label-success' : 'label label-danger'}"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{'/admin/account/edit/' + ${user.id}}"
+                                   class="btn btn-success btn-sm">Sửa</a>
+                                <a th:href="@{'/admin/account/detail/' + ${user.id}}" class="btn btn-info btn-sm">Chi
+                                    tiết</a>
+                                <a th:href="@{'/admin/account/delete/' + ${user.id}}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')">Xoá</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li th:if="${currentPage > 1}">
+                                <a th:href="@{'/admin/account/management?pageNo=' + ${currentPage - 1} + '&keyword=' + ${keyword} + '&filterBy=' + ${filterBy} + '&role=' + ${role}}">«</a>
+                            </li>
+                            <li th:each="i : ${#numbers.sequence(1, totalPage)}"
+                                th:classappend="${currentPage == i ? 'active' : ''}">
+                                <a th:href="@{'/admin/account/management?pageNo=' + ${i} + '&keyword=' + ${keyword} + '&filterBy=' + ${filterBy} + '&role=' + ${role}}"
+                                   th:text="${i}"></a>
+                            </li>
+                            <li th:if="${currentPage < totalPage}">
+                                <a th:href="@{'/admin/account/management?pageNo=' + ${currentPage + 1} + '&keyword=' + ${keyword} + '&filterBy=' + ${filterBy} + '&role=' + ${role}}">»</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div th:replace="admin/fragments/script :: script"></div>
+</body>
+</html>

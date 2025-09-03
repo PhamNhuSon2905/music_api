@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Đăng ký quản trị</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon/logoZ.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/AdminLTE.css}">
+    <style>
+        .error { color: red; font-size: 1em; }
+
+    </style>
+</head>
+
+<body class="hold-transition login-page">
+<div class="container">
+    <div class="login-box">
+        <div class="login-box-body">
+            <p class="login-box-msg">Đăng ký quản trị</p>
+            <div th:if="${error}">
+                <div class="alert alert-danger" th:text="${error}"></div>
+            </div>
+
+            <form th:action="@{/admin/auth/register}" method="post" th:object="${adminRegisterDTO}">
+                <div class="form-group">
+                    <label for="username">Tên người dùng</label>
+                    <input type="text" id="username" class="form-control" placeholder="Tên người dùng..."
+                           th:field="*{username}">
+                    <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Địa chỉ email..."
+                           th:field="*{email}">
+                    <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" class="form-control" placeholder="Mật khẩu..."
+                           th:field="*{password}">
+                    <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fullname">Họ và tên</label>
+                    <input type="text" id="fullname" class="form-control" placeholder="Họ và tên..."
+                           th:field="*{fullname}">
+                    <div class="error" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Địa chỉ</label>
+                    <input type="text" id="address" class="form-control" placeholder="Địa chỉ..."
+                           th:field="*{address}">
+                    <div class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="text" id="phone" class="form-control" placeholder="Số điện thoại..."
+                           th:field="*{phone}">
+                    <div class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Giới tính</label><br>
+                    <label>
+                        <input type="radio" th:field="*{gender}" value="true"> Nam
+                    </label>
+                    &nbsp;&nbsp;
+                    <label>
+                        <input type="radio" th:field="*{gender}" value="false"> Nữ
+                    </label>
+                    <div class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Đăng ký</button>
+            </form>
+
+            <p class="text-center" style="margin-top: 15px;">
+                Đã có tài khoản? <a th:href="@{/admin/auth/login}">Đăng nhập tại đây</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

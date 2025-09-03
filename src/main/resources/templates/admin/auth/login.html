@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Đăng nhập quản trị</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon/logoZ.ico}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/AdminLTE.css}">
+    <link rel="stylesheet" th:href="@{/assets/plugins/iCheck/square/blue.css}">
+    <style>
+        .error { color: red; font-size: 1em; }
+    </style>
+</head>
+
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <a href="#">Đăng nhập quản trị</a>
+    </div>
+
+    <div class="login-box-body">
+        <p class="login-box-msg">Đăng nhập để bắt đầu phiên làm việc của bạn!</p>
+
+
+        <div th:if="${success}">
+            <div class="alert alert-success" th:text="${success}"></div>
+        </div>
+
+        <div th:if="${param.logout}" class="alert alert-success">
+            Bạn đã đăng xuất thành công!
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+            <span th:text="${error}"></span>
+        </div>
+
+
+        <form th:action="@{/admin/auth/login}" method="post" th:object="${adminLoginDTO}">
+            <div class="form-group has-feedback">
+                <input type="text" th:field="*{username}" name="username" class="form-control"
+                       placeholder="Nhập tên người dùng..."/>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+            </div>
+
+            <div class="form-group has-feedback">
+                <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu..."
+                       th:field="*{password}"/>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+        </form>
+
+        <p class="text-center" style="margin-top: 15px;">
+            Bạn chưa có tài khoản?
+            <a th:href="@{/admin/auth/register}">Đăng ký ở đây!</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
