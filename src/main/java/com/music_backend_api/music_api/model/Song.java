@@ -1,5 +1,6 @@
 package com.music_backend_api.music_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,5 +54,9 @@ public class Song {
 
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteSong> likedByUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<PlaylistSong> playlistSongs = new ArrayList<>();
 
 }

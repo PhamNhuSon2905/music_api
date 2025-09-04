@@ -1,5 +1,6 @@
 package com.music_backend_api.music_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.music_backend_api.music_api.roles.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -81,6 +82,10 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteSong> favoriteSongs = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Playlist> playlists = new ArrayList<>();
 
 
     // Constructors
