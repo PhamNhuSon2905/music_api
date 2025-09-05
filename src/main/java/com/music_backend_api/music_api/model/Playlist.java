@@ -28,11 +28,6 @@ public class Playlist {
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(name = "is_sequential", nullable = false)
-    private Boolean isSequential = false;
-
-    @Column(name = "auto_download", nullable = false)
-    private Boolean autoDownload = false;
 
     @ManyToOne
     @JsonIgnore
