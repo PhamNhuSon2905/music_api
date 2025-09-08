@@ -9,6 +9,6 @@ import lombok.Setter;
 public class PlaylistSongRequest {
 
     private Long playlistId;
-    private Long songId;
+    private String songId;
     private Integer trackOrder;
 }
