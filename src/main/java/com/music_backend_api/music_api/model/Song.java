@@ -56,7 +56,7 @@ public class Song {
     private List<FavoriteSong> likedByUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
-    
+        
     private List<PlaylistSong> playlistSongs = new ArrayList<>();
 
 }
