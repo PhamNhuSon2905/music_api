@@ -1,5 +1,6 @@
 package com.music_backend_api.music_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +21,12 @@ public class PlaylistSong {
     private Long id;
 
     @ManyToOne(optional = false , fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "playlist_id")
     private Playlist playlist;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "song_id")
     private Song song;
 
