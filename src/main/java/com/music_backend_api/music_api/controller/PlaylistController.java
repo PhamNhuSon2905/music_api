@@ -34,6 +34,7 @@ public class PlaylistController {
     @Operation(summary = "Lấy playlist theo ID", description = "Trả về thông tin playlist tương ứng với ID.")
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
+
         return playlistService.getPlaylistById(id);
     }
 
@@ -46,6 +47,7 @@ public class PlaylistController {
     @Operation(summary = "Xoá playlist", description = "Xoá playlist theo ID, đồng thời xoá các bài hát trong đó.")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
+
         return playlistService.deletePlaylist(id);
     }
 

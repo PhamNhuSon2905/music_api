@@ -1,5 +1,6 @@
 package com.music_backend_api.music_api.service;
 
+import com.music_backend_api.music_api.DTO.SongAddPlaylistDTO;
 import com.music_backend_api.music_api.RequestUserDTO.PlaylistSongRequest;
 import com.music_backend_api.music_api.model.Playlist;
 import com.music_backend_api.music_api.model.PlaylistSong;
@@ -53,7 +54,7 @@ public class PlaylistSongService {
     // Thêm bài hát vào playlist
     public ResponseEntity<?> addSongToPlaylist(PlaylistSongRequest request) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(request.getPlaylistId());
-        Optional<Song> songOpt = songRepository.findById(request.getSongId()); // songId đã là String
+        Optional<Song> songOpt = songRepository.findById(request.getSongId());
 
         if (playlistOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -63,15 +64,22 @@ public class PlaylistSongService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Không tìm thấy bài hát"));
         }
+        Song song = songOpt.get();
         PlaylistSong playlistSong = new PlaylistSong(
                 playlistOpt.get(),
-                songOpt.get(),
+                song,
                 request.getTrackOrder() != null ? request.getTrackOrder() : 0
         );
-
         PlaylistSong saved = playlistSongRepository.save(playlistSong);
+        SongAddPlaylistDTO dto = new SongAddPlaylistDTO();
+        dto.setSongId(song.getId());
+        dto.setTitle(song.getTitle());
+        dto.setArtist(song.getArtist());
+        dto.setImageUrl(song.getImage());
+        dto.setTrackOrder(saved.getTrackOrder());
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message", "Thêm bài hát vào playlist thành công", "playlistSong", saved));
+                .body(Map.of("message", "Thêm bài hát vào playlist thành công", "song", dto));
     }
 
     // Xóa bài hát khỏi playlist
