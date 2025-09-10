@@ -12,6 +12,9 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     // Lấy tất cả playlist của 1 user với phân trang
     Page<Playlist> findByUser(User user, Pageable pageable);
 
+    // kiem tra trung playlist theo nguoi dung
+    boolean existsByUserAndName(User user, String name);
+
     // Tìm kiếm playlist theo tên với phân trang
     Page<Playlist> findByUserAndNameContainingIgnoreCase(User user, String name, Pageable pageable);
 
