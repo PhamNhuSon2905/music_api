@@ -26,25 +26,19 @@ public class PlaylistSong {
     private Playlist playlist;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "song_id")
     private Song song;
 
     @Column(name = "added_at", updatable = false, nullable = false)
     private LocalDateTime addedAt = LocalDateTime.now();
 
-    @Column(name = "track_order" , nullable = false)
-    private Integer trackOrder;
-
     public PlaylistSong() {
 
     }
-
-
-    public PlaylistSong(Playlist playlist, Song song, Integer trackOrder) {
+    public PlaylistSong(Playlist playlist, Song song) {
         this.playlist = playlist;
         this.song = song;
-        this.trackOrder = trackOrder;
+        this.addedAt = LocalDateTime.now();
     }
 
 }

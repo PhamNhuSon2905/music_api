@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -71,6 +72,7 @@ public class PlaylistService {
         Playlist playlist = new Playlist();
         playlist.setName(request.getName());
         playlist.setUser(user);
+        playlist.setCreatedAt(LocalDateTime.now());
 
         MultipartFile imageFile = request.getImageFile();
 

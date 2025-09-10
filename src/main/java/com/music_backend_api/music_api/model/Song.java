@@ -1,6 +1,7 @@
 package com.music_backend_api.music_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,13 +51,15 @@ public class Song {
     @ManyToOne
     @JoinColumn(name = "genre_id")
     @Setter
+    @JsonIgnoreProperties("songs")
     private Genre genre;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteSong> likedByUsers = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
-        
     private List<PlaylistSong> playlistSongs = new ArrayList<>();
 
 }
