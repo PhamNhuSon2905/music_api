@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -51,16 +52,25 @@ public class PlaylistService {
     }
 
     // Tạo playlist mới
+    // Tạo playlist mới
     public ResponseEntity<?> createPlaylist(PlaylistRequest request) {
         Optional<User> userOpt = userRepository.findById(request.getUserId());
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Không tìm thấy user"));
+                    .body(Map.of("error", "Không tìm thấy user!"));
+        }
+
+        User user = userOpt.get();
+
+        // Kiểm tra trùng tên playlist trong cùng user
+        if (playlistRepository.existsByUserAndName(user, request.getName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Tên playlist đã tồn tại!"));
         }
 
         Playlist playlist = new Playlist();
         playlist.setName(request.getName());
-        playlist.setUser(userOpt.get());
+        playlist.setUser(user);
 
         MultipartFile imageFile = request.getImageFile();
 
@@ -76,7 +86,7 @@ public class PlaylistService {
                 savedImage.getParentFile().mkdirs();
                 imageFile.transferTo(savedImage);
 
-                // Lưu đường dẫn tĩnh để client có thể truy cập
+                // Lưu đường dẫn ảnh
                 playlist.setImage("/imagePlaylist/" + fileName);
 
             } catch (IOException e) {
@@ -88,22 +98,22 @@ public class PlaylistService {
 
         Playlist saved = playlistRepository.save(playlist);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message", "Tạo playlist thành công", "playlist", saved));
+                .body(Map.of("message", "Tạo playlist thành công!", "playlist", saved));
     }
+
 
     // Xóa playlist
     public ResponseEntity<?> deletePlaylist(Long id) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(id);
         if (playlistOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Không tìm thấy playlist"));
+                    .body(Map.of("error", "Không tìm thấy playlist!"));
         }
 
         Playlist playlist = playlistOpt.get();
 
         // Xóa ảnh nếu có
         if (playlist.getImage() != null) {
-            // playlist.getImage() = "/imagePlaylist/abc.jpg"
             String fileName = playlist.getImage().replace("/imagePlaylist/", "");
             File file = new File(new File(uploadImagePlaylistDir).getAbsolutePath(), fileName);
             if (file.exists()) file.delete();
@@ -111,7 +121,7 @@ public class PlaylistService {
 
         playlistRepository.delete(playlist);
 
-        return ResponseEntity.ok(Map.of("message", "Xóa playlist thành công"));
+        return ResponseEntity.ok(Map.of("message", "Xóa playlist thành công!"));
     }
 
 
