@@ -8,7 +8,10 @@ import lombok.Setter;
 @Setter
 public class PlaylistSongRequest {
 
+    @NotNull(message = "PlaylistId không được để trống!")
     private Long playlistId;
+
+    @NotNull(message = "SongId không được để trống!")
     private String songId;
-    private Integer trackOrder;
+
 }

@@ -3,6 +3,8 @@ package com.music_backend_api.music_api.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class SongAddPlaylistDTO {
@@ -10,7 +12,7 @@ public class SongAddPlaylistDTO {
     private String title;
     private String artist;
     private String imageUrl;
-    private Integer trackOrder;
-    private boolean added; // true nếu bài hát đã nằm trong playlist, false nếu chưa
+    private boolean added;
+    private LocalDateTime addedAt;
 
 }

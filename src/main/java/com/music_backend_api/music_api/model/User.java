@@ -79,7 +79,7 @@ public class User {
     @Column(name = "last_login")
     private Timestamp lastLogin;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteSong> favoriteSongs = new ArrayList<>();
 

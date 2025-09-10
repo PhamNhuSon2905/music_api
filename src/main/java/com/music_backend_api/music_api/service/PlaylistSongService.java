@@ -14,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistSongService {
@@ -34,7 +36,7 @@ public class PlaylistSongService {
         this.songRepository = songRepository;
     }
 
-    // Lấy danh sách bài hát trong playlist
+    // Lấy danh sách bài hát trong playlist (mới thêm sẽ lên đầu)
     public ResponseEntity<?> getSongsInPlaylist(Long playlistId, int page, int size) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (playlistOpt.isEmpty()) {
@@ -42,16 +44,21 @@ public class PlaylistSongService {
                     .body(Map.of("error", "Không tìm thấy playlist"));
         }
 
-        Page<PlaylistSong> songs = playlistSongRepository.findByPlaylistOrderByTrackOrderAsc(
+        Page<PlaylistSong> songsPage = playlistSongRepository.findByPlaylistOrderByAddedAtDesc(
                 playlistOpt.get(), PageRequest.of(page, size));
 
+        List<SongAddPlaylistDTO> dtoList = songsPage.getContent()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(Map.of(
-                "songs", songs.getContent(),
-                "total", songs.getTotalElements()
+                "songs", dtoList,
+                "total", songsPage.getTotalElements()
         ));
     }
 
-    // Thêm bài hát vào playlist
+    // Thêm bài hát vào playlist (mới thêm sẽ lên đầu nhờ addedAt)
     public ResponseEntity<?> addSongToPlaylist(PlaylistSongRequest request) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(request.getPlaylistId());
         Optional<Song> songOpt = songRepository.findById(request.getSongId());
@@ -64,19 +71,20 @@ public class PlaylistSongService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Không tìm thấy bài hát"));
         }
+
+        Playlist playlist = playlistOpt.get();
         Song song = songOpt.get();
-        PlaylistSong playlistSong = new PlaylistSong(
-                playlistOpt.get(),
-                song,
-                request.getTrackOrder() != null ? request.getTrackOrder() : 0
-        );
+
+        // Check trùng
+        if (playlistSongRepository.findByPlaylistAndSong(playlist, song).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Bài hát đã tồn tại trong playlist"));
+        }
+
+        PlaylistSong playlistSong = new PlaylistSong(playlist, song);
         PlaylistSong saved = playlistSongRepository.save(playlistSong);
-        SongAddPlaylistDTO dto = new SongAddPlaylistDTO();
-        dto.setSongId(song.getId());
-        dto.setTitle(song.getTitle());
-        dto.setArtist(song.getArtist());
-        dto.setImageUrl(song.getImage());
-        dto.setTrackOrder(saved.getTrackOrder());
+
+        SongAddPlaylistDTO dto = toDTO(saved);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message", "Thêm bài hát vào playlist thành công", "song", dto));
@@ -85,7 +93,7 @@ public class PlaylistSongService {
     // Xóa bài hát khỏi playlist
     public ResponseEntity<?> removeSongFromPlaylist(Long playlistId, String songId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
-        Optional<Song> songOpt = songRepository.findById(songId); // songId là String
+        Optional<Song> songOpt = songRepository.findById(songId);
 
         if (playlistOpt.isEmpty() || songOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -97,7 +105,7 @@ public class PlaylistSongService {
         return ResponseEntity.ok(Map.of("message", "Xóa bài hát khỏi playlist thành công"));
     }
 
-    // Tìm kiếm bài hát trong playlist theo tên
+    // Tìm kiếm bài hát trong playlist
     public ResponseEntity<?> searchSongsInPlaylist(Long playlistId, String keyword, int page, int size) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (playlistOpt.isEmpty()) {
@@ -105,14 +113,32 @@ public class PlaylistSongService {
                     .body(Map.of("error", "Không tìm thấy playlist"));
         }
 
-        Page<PlaylistSong> songs = playlistSongRepository
-                .findByPlaylistAndSong_TitleContainingIgnoreCaseOrderByTrackOrderAsc(
+        Page<PlaylistSong> songsPage = playlistSongRepository
+                .findByPlaylistAndSong_TitleContainingIgnoreCaseOrderByAddedAtDesc(
                         playlistOpt.get(), keyword, PageRequest.of(page, size)
                 );
 
+        List<SongAddPlaylistDTO> dtoList = songsPage.getContent()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(Map.of(
-                "songs", songs.getContent(),
-                "total", songs.getTotalElements()
+                "songs", dtoList,
+                "total", songsPage.getTotalElements()
         ));
+    }
+
+    // Helper Convert entity -> DTO
+    private SongAddPlaylistDTO toDTO(PlaylistSong ps) {
+        Song song = ps.getSong();
+        SongAddPlaylistDTO dto = new SongAddPlaylistDTO();
+        dto.setSongId(song.getId());
+        dto.setTitle(song.getTitle());
+        dto.setArtist(song.getArtist());
+        dto.setImageUrl(song.getImage());
+        dto.setAdded(true);
+        dto.setAddedAt(ps.getAddedAt());
+        return dto;
     }
 }

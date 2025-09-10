@@ -29,8 +29,7 @@ public class Playlist {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "created_at", insertable = false, updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
 
@@ -39,6 +38,7 @@ public class Playlist {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PlaylistSong> playListSongs = new ArrayList<>();
 
