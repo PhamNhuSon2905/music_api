@@ -59,12 +59,18 @@ public class UserService {
             Path fullPath = Paths.get(projectDir, avatarUploadDir);
             Files.createDirectories(fullPath);
             String currentAvatarPath = user.getAvatar();
-            if (currentAvatarPath != null && !currentAvatarPath.equals("/avatar/default_user.png")) {
-                Path oldFilePath = fullPath.resolve(Paths.get(currentAvatarPath).getFileName().toString());
-                if (Files.exists(oldFilePath)) {
-                    Files.delete(oldFilePath);
+            if (currentAvatarPath != null) {
+                String fileName = Paths.get(currentAvatarPath).getFileName().toString();
+
+                // Nếu không phải ảnh default thì xóa
+                if (!"default_user.png".equals(fileName)) {
+                    Path oldFilePath = fullPath.resolve(fileName);
+                    if (Files.exists(oldFilePath)) {
+                        Files.delete(oldFilePath);
+                    }
                 }
             }
+
             String filename = user.getId() + "_" + UUID.randomUUID() + "_" + originalFilename;
             Path filePath = fullPath.resolve(filename);
             file.transferTo(filePath.toFile());
