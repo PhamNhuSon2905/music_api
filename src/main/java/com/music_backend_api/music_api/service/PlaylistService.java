@@ -5,12 +5,18 @@ import com.music_backend_api.music_api.model.Playlist;
 import com.music_backend_api.music_api.model.User;
 import com.music_backend_api.music_api.repository.PlaylistRepository;
 import com.music_backend_api.music_api.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -101,6 +107,37 @@ public class PlaylistService {
         Playlist saved = playlistRepository.save(playlist);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message", "Tạo playlist thành công!", "playlist", saved));
+    }
+
+    public Playlist updatePlaylist(Long id, PlaylistRequest request, MultipartFile imageFile) {
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy playlist!"));
+        playlist.setName(request.getName());
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String imageDir = new File(uploadImagePlaylistDir).getAbsolutePath();
+                String fileName = UUID.randomUUID().toString().substring(0, 10)
+                        + "_" + imageFile.getOriginalFilename();
+
+                File savedImage = new File(imageDir + "/" + fileName);
+                savedImage.getParentFile().mkdirs();
+                imageFile.transferTo(savedImage);
+                if (playlist.getImage() != null) {
+                    String oldFileName = playlist.getImage().replace("/imagePlaylist/", "");
+                    File oldFile = new File(imageDir, oldFileName);
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
+                }
+
+                playlist.setImage("/imagePlaylist/" + fileName);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Không thể lưu ảnh mới: " + e.getMessage());
+            }
+        }
+
+        return playlistRepository.save(playlist);
     }
 
 
