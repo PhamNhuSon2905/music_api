@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,7 @@ public class PlaylistSongService {
     }
 
     // Xóa bài hát khỏi playlist
+    @Transactional
     public ResponseEntity<?> removeSongFromPlaylist(Long playlistId, String songId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         Optional<Song> songOpt = songRepository.findById(songId);
@@ -135,8 +137,12 @@ public class PlaylistSongService {
         SongAddPlaylistDTO dto = new SongAddPlaylistDTO();
         dto.setSongId(song.getId());
         dto.setTitle(song.getTitle());
+        dto.setAlbum(song.getAlbum());
         dto.setArtist(song.getArtist());
-        dto.setImageUrl(song.getImage());
+        dto.setSource(song.getSource());
+        dto.setImage(song.getImage());
+        dto.setDuration(song.getDuration());
+        dto.setCreatedAt(song.getCreatedAt());
         dto.setAdded(true);
         dto.setAddedAt(ps.getAddedAt());
         return dto;
