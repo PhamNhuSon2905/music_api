@@ -112,7 +112,11 @@ public class PlaylistService {
     public Playlist updatePlaylist(Long id, PlaylistRequest request, MultipartFile imageFile) {
         Playlist playlist = playlistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy playlist!"));
+
+        // cập nhật tên
         playlist.setName(request.getName());
+
+        // cập nhật ảnh nếu có file mới
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 String imageDir = new File(uploadImagePlaylistDir).getAbsolutePath();
@@ -122,12 +126,12 @@ public class PlaylistService {
                 File savedImage = new File(imageDir + "/" + fileName);
                 savedImage.getParentFile().mkdirs();
                 imageFile.transferTo(savedImage);
+
+                // Xóa ảnh cũ nếu có
                 if (playlist.getImage() != null) {
                     String oldFileName = playlist.getImage().replace("/imagePlaylist/", "");
                     File oldFile = new File(imageDir, oldFileName);
-                    if (oldFile.exists()) {
-                        oldFile.delete();
-                    }
+                    if (oldFile.exists()) oldFile.delete();
                 }
 
                 playlist.setImage("/imagePlaylist/" + fileName);

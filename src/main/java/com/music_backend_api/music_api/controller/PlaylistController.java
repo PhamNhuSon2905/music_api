@@ -49,15 +49,13 @@ public class PlaylistController {
         return playlistService.createPlaylist(request);
     }
 
-    @Operation(summary = "Cập nhật playlist", description = "Cập nhật thông tin playlist, có thể thay đổi tên và ảnh.")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(
             @PathVariable Long id,
-            @ModelAttribute @Valid PlaylistRequest request,
-            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile
+            @ModelAttribute @Valid PlaylistRequest request
     ) {
         try {
-            Playlist updated = playlistService.updatePlaylist(id, request, imageFile);
+            Playlist updated = playlistService.updatePlaylist(id, request, request.getImageFile());
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Cập nhật playlist thành công!");
             response.put("playlist", updated);
@@ -66,6 +64,7 @@ public class PlaylistController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
 
 
     @Operation(summary = "Xoá playlist", description = "Xoá playlist theo ID, đồng thời xoá các bài hát trong đó.")
