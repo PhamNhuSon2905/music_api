@@ -20,8 +20,10 @@ public class PlaylistSongController {
         this.playlistSongService = playlistSongService;
     }
 
-    @Operation(summary = "Lấy danh sách bài hát trong playlist",
-            description = "Trả về danh sách bài hát thuộc playlist kèm phân trang.")
+    @Operation(
+            summary = "Lấy danh sách bài hát trong playlist",
+            description = "Trả về danh sách bài hát thuộc playlist kèm phân trang."
+    )
     @GetMapping("/{playlistId}")
     public ResponseEntity<?> getSongsInPlaylist(
             @PathVariable Long playlistId,
@@ -31,15 +33,19 @@ public class PlaylistSongController {
         return playlistSongService.getSongsInPlaylist(playlistId, page, size);
     }
 
-    @Operation(summary = "Thêm bài hát vào playlist",
-            description = "Thêm một bài hát vào playlist đã chọn.")
+    @Operation(
+            summary = "Thêm bài hát vào playlist",
+            description = "Thêm một bài hát vào playlist đã chọn."
+    )
     @PostMapping
     public ResponseEntity<?> addSongToPlaylist(@RequestBody @Valid PlaylistSongRequest request) {
         return playlistSongService.addSongToPlaylist(request);
     }
 
-    @Operation(summary = "Xóa bài hát khỏi playlist",
-            description = "Xóa một bài hát ra khỏi playlist theo playlistId và songId.")
+    @Operation(
+            summary = "Xóa bài hát khỏi playlist",
+            description = "Xóa một bài hát ra khỏi playlist theo playlistId và songId."
+    )
     @DeleteMapping("/{playlistId}/{songId}")
     public ResponseEntity<?> removeSongFromPlaylist(
             @PathVariable Long playlistId,
@@ -48,8 +54,10 @@ public class PlaylistSongController {
         return playlistSongService.removeSongFromPlaylist(playlistId, songId);
     }
 
-    @Operation(summary = "Tìm kiếm bài hát trong playlist",
-            description = "Tìm kiếm bài hát theo tên trong playlist (có phân trang).")
+    @Operation(
+            summary = "Tìm kiếm bài hát trong playlist",
+            description = "Tìm kiếm bài hát theo tên trong playlist"
+    )
     @GetMapping("/{playlistId}/search")
     public ResponseEntity<?> searchSongsInPlaylist(
             @PathVariable Long playlistId,
